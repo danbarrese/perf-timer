@@ -17,12 +17,12 @@ public class TimerStats implements Serializable {
     private static long serialVersionUID = 1L;
     private long totalMillisForAllTimers;
     private long jvmRunTime;
-    private List<TickStats> tickStats;
+    private List<TickerStats> tickerStats;
 
-    public TimerStats(long totalMillisForAllTimers, long jvmRunTime, List<TickStats> tickStats) {
+    public TimerStats(long totalMillisForAllTimers, long jvmRunTime, List<TickerStats> tickerStats) {
         this.totalMillisForAllTimers = totalMillisForAllTimers;
         this.jvmRunTime = jvmRunTime;
-        this.tickStats = tickStats;
+        this.tickerStats = tickerStats;
     }
 
     @Override
@@ -30,8 +30,8 @@ public class TimerStats implements Serializable {
         return String.format("All Timers: %d ms -- JVM run time: %d ms%s",
                 totalMillisForAllTimers,
                 jvmRunTime,
-                System.lineSeparator() + tickStats.stream()
-                        .map(TickStats::toString)
+                System.lineSeparator() + tickerStats.stream()
+                        .map(TickerStats::toString)
                         .collect(Collectors.joining(System.lineSeparator())));
     }
 
@@ -39,7 +39,7 @@ public class TimerStats implements Serializable {
     // public inner classes
     // ---------------------------------------
 
-    public static class TickStats implements Serializable, Comparable<TickStats> {
+    public static class TickerStats implements Serializable, Comparable<TickerStats> {
         private static long serialVersionUID = 1L;
         private static final DecimalFormat df = new DecimalFormat("0.00");
         private String name;
@@ -56,7 +56,7 @@ public class TimerStats implements Serializable {
         public void setTotalMillisForAllTimers(LongRef totalMillisForAllTimers) { this.totalMillisForAllTimers = totalMillisForAllTimers; }
 
         @Override
-        public int compareTo(TickStats o) {
+        public int compareTo(TickerStats o) {
             return Double.compare(o.threadTicker.sum, this.threadTicker.sum);
         }
 

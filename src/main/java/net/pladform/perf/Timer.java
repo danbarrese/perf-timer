@@ -58,25 +58,25 @@ public class Timer {
         }
     }
 
-    public static TickStats getTickStats(String name) {
-        TickStats tickStats = new TickStats();
-        tickStats.setThreadTicker(new ThreadTicker());
-        tickStats.setName(name);
+    public static TickerStats getTickerStats(String name) {
+        TickerStats tickerStats = new TickerStats();
+        tickerStats.setThreadTicker(new ThreadTicker());
+        tickerStats.setName(name);
         for (ThreadTicker ticker : timers.get(name).values()) {
-            tickStats.getThreadTicker().merge(ticker);
+            tickerStats.getThreadTicker().merge(ticker);
         }
-        return tickStats;
+        return tickerStats;
     }
 
     public static TimerStats getStats() {
         long jvmRunTime = Duration.between(jvmStart, Instant.now()).toMillis();
         LongRef totalMillisForAllTimers = new LongRef(0L);
-        List<TickStats> allTickStats = timers.keySet().stream()
+        List<TickerStats> allTickStats = timers.keySet().stream()
                 .map(name -> {
-                    TickStats tickStats = getTickStats(name);
-                    totalMillisForAllTimers.incNum(tickStats.getThreadTicker().getSum());
-                    tickStats.setTotalMillisForAllTimers(totalMillisForAllTimers);
-                    return tickStats;
+                    TickerStats tickerStats = getTickerStats(name);
+                    totalMillisForAllTimers.incNum(tickerStats.getThreadTicker().getSum());
+                    tickerStats.setTotalMillisForAllTimers(totalMillisForAllTimers);
+                    return tickerStats;
                 })
                 .sorted()
                 .collect(Collectors.toList());
